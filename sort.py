@@ -1,8 +1,5 @@
 from PIL import Image, ImageDraw
 import random
-'''
-images[0].save('blah.gif', save_all = True, append_images = images[1:], optimized = False, duration = 1, loop = 0)
-'''
 
 def makeInsertionSortGif(height, width, pixels):
     images = []
@@ -30,10 +27,27 @@ def makeBubbleSortGif(height, width, pixels):
                 if count%100 == 0:
                     print(str(count) + ' done on bubble')
                     images.append(makeImage(height, width, pixels))
-
                 pixels[j], pixels[j+1] = pixels[j+1], pixels[j]
                 count += 1
     images[0].save('sort_images/bubble_sort.gif', save_all = True, append_images = images[1:], optimized = False, duration = 100)
+
+
+def makeSelectionSortGif(height, width, pixels):
+    images = [makeImage(height, width, pixels)]
+    count = 0
+    for i in range(len(pixels)):
+        min_idx = i
+        for j in range(i+1, len(pixels)):
+            if pixels[min_idx][0] > pixels[j][0]:
+                min_idx = j
+        pixels[i], pixels[min_idx] = pixels[min_idx], pixels[i]
+        images.append(makeImage(height, width, pixels))
+        count += 1
+        print("On " + str(count))
+    images[0].save('sort_images/selection_sort.gif', save_all = True, append_images = images[1:], optimized = False, duration = 1)
+
+
+
 
 
 
@@ -48,7 +62,6 @@ def makeImage(height, width, pixels):
     return image
 
 
-
 def runscript(imageName):
     initialImage = Image.open(imageName)
     height, width = initialImage.size[0], initialImage.size[1]
@@ -60,17 +73,15 @@ def runscript(imageName):
             pixels.append((count, color))
             count+= 1
     random.shuffle(pixels)
-    makeInsertionSortGif(height, width, pixels.copy())
-    makeBubbleSortGif(height, width, pixels.copy())
+    #makeInsertionSortGif(height, width, pixels.copy())
+    #makeBubbleSortGif(height, width, pixels.copy())
+    #makeSelectionSortGif(height, width, pixels)
 
 
-
-runscript("pikachu2.jpg")
+runscript("pikachu.jpg")
 
 '''
-Insertion sort
-Bubble sort
-Selection sort
+
 Merge Sort
 Quick Sort
 Counting Sort
