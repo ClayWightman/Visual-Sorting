@@ -8,13 +8,12 @@ def makeInsertionSortGif(height, width, pixels):
         key = pixels[i][0]
         valueHolder = pixels[i]
         j = i-1
-        if i%100 == 0:
-            print(str(i) + ' done on insertion')
         while j >= 0 and key < pixels[j][0]:
             pixels[j+1] = pixels[j]
             j -= 1
         pixels[j+1] = valueHolder
     images.append(makeImage(height, width, pixels))
+    print("insertion sort took " + str(len(images)))
     images[0].save('sort_images/insertion_sort.gif', save_all = True, append_images = images[1:], optimized = False, duration = 1)
 
 
@@ -25,10 +24,10 @@ def makeBubbleSortGif(height, width, pixels):
         for j in range(0, len(pixels) -i -1):
             if pixels[j][0] > pixels[j+1][0]:
                 if count%100 == 0:
-                    print(str(count) + ' done on bubble')
                     images.append(makeImage(height, width, pixels))
                 pixels[j], pixels[j+1] = pixels[j+1], pixels[j]
                 count += 1
+    print("bubble sort took " + str(len(images) * 100))
     images[0].save('sort_images/bubble_sort.gif', save_all = True, append_images = images[1:], optimized = False, duration = 100)
 
 
@@ -43,12 +42,37 @@ def makeSelectionSortGif(height, width, pixels):
         pixels[i], pixels[min_idx] = pixels[min_idx], pixels[i]
         images.append(makeImage(height, width, pixels))
         count += 1
-        print("On " + str(count))
+    print("selection sort took " + str(len(images)))
     images[0].save('sort_images/selection_sort.gif', save_all = True, append_images = images[1:], optimized = False, duration = 1)
 
 
 
+def quickSortPartition(height, width, pixels, low, high, images):
+    i = (low-1)
+    pivot = pixels[high][0]
+    for j in range(low, high):
+        if pixels[j][0] <= pivot:
+            i += 1
+            pixels[i], pixels[j] = pixels[j], pixels[i]
+    pixels[i+1], pixels[high] = pixels[high], pixels[i+1]
+    images.append(makeImage(height,width,pixels))
+    return (i+1)
 
+
+def quickSort(height, width, pixels, low, high, images):
+    if len(pixels) == 1:
+        return pixels
+    if low < high:
+        pi = quickSortPartition(height, width, pixels, low, high, images)
+        quickSort(height, width, pixels, low, pi-1, images)
+        quickSort(height, width, pixels, pi+1, high, images)
+
+
+def makeQuickSortGif(height, width, pixels, low, high):
+    images = []
+    quickSort(height, width, pixels, low, high, images)
+    print("Quick sort took " + str(len(images)))
+    images[0].save('sort_images/quick_sort.gif', save_all = True, append_images = images[1:], optimized = False, duration = 1)
 
 
 def makeImage(height, width, pixels):
@@ -73,11 +97,13 @@ def runscript(imageName):
             pixels.append((count, color))
             count+= 1
     random.shuffle(pixels)
-    #makeInsertionSortGif(height, width, pixels.copy())
-    #makeBubbleSortGif(height, width, pixels.copy())
-    #makeSelectionSortGif(height, width, pixels)
+    makeInsertionSortGif(height, width, pixels.copy())
+    makeBubbleSortGif(height, width, pixels.copy())
+    makeSelectionSortGif(height, width, pixels.copy())
+    makeQuickSortGif(height, width, pixels.copy(), 0, len(pixels)-1)
+    
 
-
+quickSortImages = []
 runscript("pikachu.jpg")
 
 '''
